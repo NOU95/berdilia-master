@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block navbar %}
+<div class="collapse navbar-collapse" id="birdNavbarTop">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+</div>
+{% endblock %}
+{% block content %}
+    {% if not label %}
+    <div class="jumbotron text-center">
+        <img src="{{ url_for('static', filename='images/image2.jpg') }}" class="img-fluid" height="60" width="600" alt="Le système d'identification des images d'oiseaux" title="Le système d'identification des images d'oiseaux" loading="lazy">
+    </div>
+    {% endif %}
+    <form id="process_image" action="" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="bird_image">Charger une image de votre Choix <small class="text-muted">(jpg, .jpeg, gif,png)</small></label>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <label for="bird_image" class="label label-info form-control" id="upload-file-info"></label>
+                <div class="input-group-append">
+                    <label class="btn btn-primary" for="bird_image" onclick="$('#upload-file-info').html('')">
+                        <input type="file" id="bird_image" name="bird_image" accept=".jpg,.jpeg,.gif,.png" style="display:none"
+                        onchange="$('#upload-file-info').html(this.files[0].name)">Sélectionner une image </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="container">
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col d-flex justify-content-center">
+                        <input type="submit" value="Valider" name="submit" class="btn btn-lg btn-dark">
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br />
+    {% if label %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="data:image/jpeg;base64,{{image}}" class="card-img-top" alt="predicted image">
+                    <div class="card-body">
+                        <h5 class="card-title">Téléchargé</h5>
+                        <p class="card-text">Nom du fichier : {{file_name}}</p>
+                        <p class="card-text">Taille du fichier : {{file_size}}</p>
+                        <p class="card-text">Résolution originale : {{width}} X {{height}} pixels</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    {% if sample_image %}
+                    <img src="data:image/jpeg;base64,{{sample_image}}" class="card-img-top" alt="sample image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">Identification</h5>
+                        <p class="card-text">Predicted : {{label}}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <p class="card-text">la prédiction est correcte ?</p>
+                        <span id="prediction_id" style="display:none">{{prediction_id}}</span>
+                        <a href="#" id="pred-correct" class="badge badge-success">Correcte</a>
+                        <a href="#" id="pred-incorrect" class="badge badge-danger">Incorrecte</a>
+                        <a href="#" id="pred-notsure" class="badge badge-info"> Pas sure </a>
+                        <span id="correctness-ack" style="display:none"><br /><small>Merci ! Votre retour nous aide à améliorer le système.</small></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col d-flex justify-content-center">
+                <a class="btn btn-secondary" href="/">Rafraîchir les résultats </a>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="container">
+        <hr/>
+        <form>
+            <div class="form-group row">
+                <div class="col d-flex justify-content-center">
+                    <p class="lead">Feedback</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col d-flex justify-content-center">
+                    <p>Avez-vous trouvé l'application BIRDELIA utile ? Faites-nous savoir comment nous pouvons l'améliorer </p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col d-flex justify-content-center">
+                    <span id="star-rating">
+                        <i class="fas fa-star fa-lg py-2 px-2 rate-star" data-index="0" title="Très mauvais"></i>
+                        <i class="fas fa-star fa-lg py-2 px-2 rate-star" data-index="1" title="mauvais"></i>
+                        <i class="fas fa-star fa-lg py-2 px-2 rate-star" data-index="2" title=" Assez bien"></i>
+                        <i class="fas fa-star fa-lg py-2 px-2 rate-star" data-index="3" title="Bien"></i>
+                        <i class="fas fa-star fa-lg py-2 px-2 rate-star" data-index="4" title="Excellent"></i>
+                    </span>
+                    <span id="star-value" style="display:none"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col d-flex justify-content-center">
+                    <textarea id="feedback-text" type="text" style="font-size: 0.78rem; text-align:center;" class="md-textarea form-control py-0" placeholder="Que pouvons-nous améliorer ?" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col d-flex justify-content-center">
+                    <button id="submit-feedback" type="button" class="btn btn-sm btn-primary">Donnez votre avis</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div id="feedback-ack"></div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+{% endblock %}
